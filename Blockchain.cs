@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace RootCoin
+namespace EnergyFi
 {
     class Blockchain
 {
@@ -63,9 +63,9 @@ namespace RootCoin
             this.pendingTransactions.Add(transaction);
         }
 
-        public decimal GetBalaceOfWallet(PublicKey address)
+        public decimal GetBalaceOfWallet(PublicKey address , decimal addition = 0)
         {
-            decimal balance = 0;
+            decimal balance = addition;
 
             string addressDER = BitConverter.ToString(address.toDer()).Replace("-", "");
 
@@ -95,15 +95,15 @@ namespace RootCoin
             return balance;
         }
 
-        public void MinePendingTransactions(PublicKey miningRewardWallet)
+        public void HashCreationPendingTransaction(PublicKey miningRewardWallet)
         {
             Transaction rewardTx = new Transaction(null, miningRewardWallet, MiningReward);
             this.pendingTransactions.Add(rewardTx);
 
             Block newBlock = new Block(GetLastestBlock().Index + 1, DateTime.Now.ToString("yyyMMddHHmmssffff"), this.pendingTransactions, GetLastestBlock().Hash);
-            newBlock.Mine(this.Difficulty);
+            newBlock.HashCreation(this.Difficulty);
 
-            Console.WriteLine("Block successfully mined!");
+            //Console.WriteLine("Block successfully mined!");
             this.Chain.Add(newBlock);
             this.pendingTransactions = new List<Transaction>();
         }

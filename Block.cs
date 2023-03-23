@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace RootCoin
+namespace EnergyFi
 {
     class Block
     {
@@ -37,7 +37,7 @@ namespace RootCoin
             return BitConverter.ToString(hashBytes).Replace("-", "");
         }
 
-        public void Mine(int difficulty)
+        public void HashCreation(int difficulty)
         {
             while (this.Hash.Substring(0,difficulty) != new String('0', difficulty))
             {
@@ -46,7 +46,7 @@ namespace RootCoin
                 //Console.WriteLine("Mining: " + this.Hash);
             }
 
-            Console.WriteLine("Block has been mined: " + this.Hash);
+            //Console.WriteLine("Hash has been created: " + this.Hash);
         }
     }
 }

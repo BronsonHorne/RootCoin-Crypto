@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace RootCoin
+namespace EnergyFi
 {
     class Transaction
     {

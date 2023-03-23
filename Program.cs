@@ -6,36 +6,48 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace RootCoin
+namespace EnergyFi
 {
     class Program
     {
         static void Main(string[] args)
         {
             PrivateKey key1 = new PrivateKey();
-            PublicKey wallet1 = key1.publicKey();
+            PublicKey userTokenWallet = key1.publicKey();
 
             PrivateKey key2 = new PrivateKey();
-            PublicKey wallet2 = key2.publicKey();
+            PublicKey companyWallet = key2.publicKey();
+
+            PrivateKey key3 = new PrivateKey();
+            PublicKey userCashWallet = key3.publicKey();
 
 
-            Blockchain rootcoin = new Blockchain(3, 100);
 
-            Console.WriteLine("Start the Miner.");
-            rootcoin.MinePendingTransactions(wallet1);
-            Console.WriteLine("\nBalance of wallet1 is $" + rootcoin.GetBalaceOfWallet(wallet1));
+            Console.WriteLine("Welcome to EnergyFi!");
 
+            Blockchain rootcoin = new Blockchain(1, 3);
+            rootcoin.HashCreationPendingTransaction(userTokenWallet);
+            Console.WriteLine("\nUser's Token Balance: " + rootcoin.GetBalaceOfWallet(userTokenWallet));
 
-            Transaction tx1 = new Transaction(wallet1, wallet2, 10);
+            Console.WriteLine("\nTransfer Initiated");
+            decimal TransferAmmount = 1;
+            Transaction tx1 = new Transaction(userTokenWallet, companyWallet, TransferAmmount);
             tx1.SignTransaction(key1);
             rootcoin.addPendingTransaction(tx1);
-            Console.WriteLine("Start the Miner.");
-            rootcoin.MinePendingTransactions(wallet2);
-            Console.WriteLine("\nBalance of wallet1 is $" + rootcoin.GetBalaceOfWallet(wallet1));
-            Console.WriteLine("\nBalance of wallet2 is $" + rootcoin.GetBalaceOfWallet(wallet2));
+            //rootcoin.HashCreationPendingTransaction(companyWallet);
+            
+            rootcoin.HashCreationPendingTransaction(companyWallet);
+
+            Console.WriteLine("You Transfered " + TransferAmmount + " Token(s)");
+            Console.WriteLine("User's Token Balance: " + rootcoin.GetBalaceOfWallet(userTokenWallet));
+            
+            rootcoin = new Blockchain(3, 100);
+            Console.WriteLine("\nStart the Miner.");
+            rootcoin.HashCreationPendingTransaction(userCashWallet);
+            Console.WriteLine("Balance of user's Cash Wallet is $" + rootcoin.GetBalaceOfWallet(userCashWallet));
 
             string blockJSON = JsonConvert.SerializeObject(rootcoin, Formatting.Indented);
-            Console.WriteLine(blockJSON);
+            //Console.WriteLine(blockJSON);
 
             //rootcoin.GetLastestBlock().PreviousHash = "12345";
 
