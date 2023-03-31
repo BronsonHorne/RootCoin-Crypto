@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace EnergyFi
+namespace recoin
 {
     class Transaction
     {
@@ -15,13 +15,15 @@ namespace EnergyFi
         public decimal Amount { get; set; }
         public Signature Signature { get; set; }
         
+        //Transferring Tokens Code
         public Transaction(PublicKey fromAddress, PublicKey toAddress, decimal amount)
         {
             this.FromAddress = fromAddress;
             this.ToAddress = toAddress;
             this.Amount = amount;
         }
-
+        
+        //Signing Transaction to disallow transferring not from your own wallet using private keys
         public void SignTransaction(PrivateKey signingKey)
         {
             string fromAddressDER = BitConverter.ToString(FromAddress.toDer()).Replace("-", "");
@@ -36,6 +38,7 @@ namespace EnergyFi
             this.Signature = Ecdsa.sign(txHash, signingKey);
         }
 
+        //Calculates Valid Hash for the Transactions
         public string CalculateHash()
         {
             string fromAddressDER = BitConverter.ToString(FromAddress.toDer()).Replace("-", "");
@@ -45,6 +48,7 @@ namespace EnergyFi
             return BitConverter.ToString(SHA256.Create().ComputeHash(tdBytes)).Replace("-", "");
         }
 
+        //Code for if the Keys for the Transfer between Wallets is valid
         public bool IsValid()
         {
             if (this.FromAddress is null) return true;

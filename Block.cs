@@ -6,8 +6,9 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace EnergyFi
+namespace recoin
 {
+    //Creates Block Class
     class Block
     {
         public int Index { get; set; }
@@ -18,7 +19,7 @@ namespace EnergyFi
         
         public List<Transaction> Transactions { get; set; }
 
-
+        //Creates a Block in the Blockchain
         public Block(int index, string timestamp, List<Transaction> transactions, string previousHash = "")
         {
             this.Index = index;
@@ -28,7 +29,7 @@ namespace EnergyFi
             this.Hash = CalculateHash();
             this.Nonce = 0;
         }
-
+        //Calculates the Valid Hash
         public string CalculateHash()
         {
             string blockData = this.Index + this.PreviousHash + this.Timestamp + this.Transactions.ToString() + this.Nonce;
@@ -36,17 +37,15 @@ namespace EnergyFi
             byte[] hashBytes = SHA256.Create().ComputeHash(blockBytes);
             return BitConverter.ToString(hashBytes).Replace("-", "");
         }
-
+        //Creates Valid Hash
         public void HashCreation(int difficulty)
         {
             while (this.Hash.Substring(0,difficulty) != new String('0', difficulty))
             {
                 this.Nonce++;
                 this.Hash = this.CalculateHash();
-                //Console.WriteLine("Mining: " + this.Hash);
             }
 
-            //Console.WriteLine("Hash has been created: " + this.Hash);
         }
     }
 }

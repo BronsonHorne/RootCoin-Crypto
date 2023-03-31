@@ -6,8 +6,9 @@ using System.Text;
 using Newtonsoft.Json;
 using EllipticCurve;
 
-namespace EnergyFi
+namespace recoin
 {
+    //Creates Blockchain Class
     class Blockchain
 {
         public List<Block> Chain { get; set; }
@@ -18,6 +19,7 @@ namespace EnergyFi
 
         public decimal MiningReward { get; set; }
 
+        //Creates Blockchain with a Genesis Block along with Transactions
         public Blockchain(int difficulty, decimal miningReward)
         {
             this.Chain = new List<Block>();
@@ -27,16 +29,19 @@ namespace EnergyFi
             this.pendingTransactions = new List<Transaction>();
         }
 
+        //Create Genesis Block for the Block Chain
         public Block CreateGenesisBlock()
         {
             return new Block(0, DateTime.Now.ToString("yyyMMddHHmmssffff"), new List<Transaction>());
         }
 
+        //Gets Latest Block in Blockchain for Validation and new block creation
         public Block GetLastestBlock()
         {
             return this.Chain.Last();
         }
 
+        //Adds A Block to the Blockchain
         public void AddBlock(Block newBlock)
         {
             newBlock.PreviousHash = this.GetLastestBlock().Hash;
@@ -44,6 +49,7 @@ namespace EnergyFi
             this.Chain.Add(newBlock);
         }
 
+        //Checks to see if Tokens are available in wallet for transactions
         public void addPendingTransaction(Transaction transaction)
         {
             if (transaction.FromAddress is null || transaction.ToAddress is null)
@@ -63,6 +69,7 @@ namespace EnergyFi
             this.pendingTransactions.Add(transaction);
         }
 
+        //Displays Token Balance
         public decimal GetBalaceOfWallet(PublicKey address , decimal addition = 0)
         {
             decimal balance = addition;
@@ -95,6 +102,7 @@ namespace EnergyFi
             return balance;
         }
 
+        //Generates Hash for the Blockchain and gives the miner the transaction fees
         public void HashCreationPendingTransaction(PublicKey miningRewardWallet)
         {
             Transaction rewardTx = new Transaction(null, miningRewardWallet, MiningReward);
@@ -102,8 +110,6 @@ namespace EnergyFi
 
             Block newBlock = new Block(GetLastestBlock().Index + 1, DateTime.Now.ToString("yyyMMddHHmmssffff"), this.pendingTransactions, GetLastestBlock().Hash);
             newBlock.HashCreation(this.Difficulty);
-
-            //Console.WriteLine("Block successfully mined!");
             this.Chain.Add(newBlock);
             this.pendingTransactions = new List<Transaction>();
         }
